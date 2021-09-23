@@ -41,9 +41,9 @@ class Celeb {
         return new Promise(async (resolve, reject) => {
             try {
                 const db = await init();
-                let data = await db.collection('celebs').insertOne({name, age, birthplace, awards});
+                await db.collection('celebs').insertOne({name, age, birthplace, awards});
+                let data = await db.collection('celebs').find({...birthplace, awards: awards})
                 let newCeleb = new Celeb(data);
-                console.log(newCeleb)
                 resolve(newCeleb);
             } catch (err) {
                 console.warn(err);
@@ -55,9 +55,8 @@ class Celeb {
     updateAge(age) {
         return new Promise(async (resolve, reject) => {
             try {
-                console.log(age)
                 const db = await init();
-                let updatedData = await db.collection('celebs').findOneAndUpdate({_id: ObjectId(this.id)}, {$set : {"age": age}})
+                let updatedData = await db.collection('celebs').findOneAndUpdate({_id: ObjectId(this.id)}, {$set: {"age": age}}, {returnDocument: "after"}, {returnOriginal: false})
                 let updatedCeleb = new Celeb(updatedData.value);
                 resolve(updatedCeleb);
             } catch (err) {
@@ -71,7 +70,7 @@ class Celeb {
         return new Promise(async (resolve, reject) => {
             try {
                 const db = await init();
-                let updatedData = await db.collection('celebs').findOneAndUpdate({_id: ObjectId(this.id)}, {$set : {awards: awards}})
+                let updatedData = await db.collection('celebs').findOneAndUpdate({_id: ObjectId(this.id)}, {$set : {awards: awards}}, {returnDocument: "after"}, {returnOriginal: false})
                 let updatedCeleb = new Celeb(updatedData.value);
                 resolve(updatedCeleb);
             } catch (err) {

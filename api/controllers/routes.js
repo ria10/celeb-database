@@ -4,7 +4,7 @@ const { init } = require('../dbConfig');
 
 const Celeb = require('../models/celeb');
 
-// index route
+// index route <-- works
 
 router.get('/', async function (req, res) {
     try {
@@ -15,7 +15,7 @@ router.get('/', async function (req, res) {
     }
 });
 
-// show route 
+// show route <-- works
 
 router.get('/:id', async function(req, res) {
     try {
@@ -26,26 +26,18 @@ router.get('/:id', async function(req, res) {
     }
 });
 
-// create route
+// create route <-- works
 
-// router.post('/', async function (req, res) {
-//     try {
-//         const celeb = await Celeb.create(req.body.name, req.body.age, req.body.birthplace, req.body.awards);
-//         console.log(celeb)
-//         res.json(celeb);
-//     } catch (err) {
-//         res.status(404).json({err});
-//     }
-// })
-
-router.post("/", async (req, res) => {
+router.post('/', async function (req, res) {
     try {
-        const db = await init();
-        let celebs = {name: req.body.name, age: req.body.age, birthplace: req.body.birthplace, awards: req.body.awards}
+        const celeb = await Celeb.create(req.body.name, req.body.age, req.body.birthplace, req.body.awards);
+        res.json(celeb);
+    } catch (err) {
+        res.status(404).json({err});
     }
 })
 
-// update age route
+// update age route <-- works
 
 router.patch('/:id/age', async function (req, res) {
     try {
@@ -57,7 +49,7 @@ router.patch('/:id/age', async function (req, res) {
     }
 })
 
-// update awards route
+// update awards route <-- works
 
 router.patch('/:id/awards', async function (req, res) {
     try {
@@ -69,12 +61,12 @@ router.patch('/:id/awards', async function (req, res) {
     }
 })
 
-// delete celeb route 
+// delete celeb route <-- works
 
 router.delete('/:id', async function (req, res) {
     try {
         const celeb = await Celeb.findById(req.params.id);
-        await Celeb.destroy();
+        await celeb.destroy();
         res.status(204).json('celeb deleted')
     } catch (err) {
         res.status(500).json({err});
